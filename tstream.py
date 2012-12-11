@@ -4,6 +4,7 @@ from pymongo import Connection
 from bson import json_util
 from tweepy.utils import import_simplejson
 
+from pit import Pit
 
 json = import_simplejson()
 mongocon = Connection()
@@ -11,14 +12,10 @@ mongocon = Connection()
 db = mongocon.tstream
 col = db.tweets_tail
 
-consumer_key = ''
-consumer_secret = ''
+config = Pit.get('twitter.com', {'require': {'ConsumerKey':'', 'ConsumerSecret':'',  'AccessToken':'', 'AccessTokenSecret':'' }})
 
-access_token_key = ''
-access_token_secret = ''
-
-auth1 = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth1.set_access_token(access_token_key, access_token_secret)
+auth1 = tweepy.OAuthHandler(config['ConsumerKey'], config['ConsumerSecret'])
+auth1.set_access_token(config['AccessToken'], config['AccessTokenSecret'])
 
 class StreamListener(tweepy.StreamListener):
     mongocon = Connection()
